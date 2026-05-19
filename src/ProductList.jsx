@@ -10,6 +10,7 @@ function ProductList({ onHomeClick }) {
     const [addedToCart, setAddedToCart] = useState({});
     const dispatch = useDispatch();
 
+    const CartItems = useSelector(state => state.cart.items);
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -266,7 +267,10 @@ function ProductList({ onHomeClick }) {
           [product.name]: true, 
         }));
     };
-    return (
+    const calculateTotalQuantity = () => {
+        return CartItems ? CartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+    };
+        return (
         <div>
             <div className="navbar" style={styleObj}>
                 <div className="tag">
@@ -307,6 +311,7 @@ function ProductList({ onHomeClick }) {
                                         <button
                                             className="product-button"
                                             disabled={addedToCart[plant.name]} // Deshabilita si ya fue agregado
+                                            style={addedToCart[plant.name] ? { backgroundColor: 'gray', color: 'white', cursor: 'not-allowed' } : {}}
                                             onClick={() => handleAddToCart(plant)}
                                         >
                                             {addedToCart[plant.name] ? 'Added' : 'Add to Cart'}
@@ -317,6 +322,8 @@ function ProductList({ onHomeClick }) {
                         </div>
                     ))}
                 </div>
+
+
 
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
